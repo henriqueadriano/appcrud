@@ -45,9 +45,10 @@ namespace AppCRUD
             #endregion
 
             #pragma warning disable
-            UpdateApp();
+            //TODO Fix the Auto-Update using Squirrel library
+            //UpdateApp();
             #pragma warning restore
-            
+
             InitializeComponent();
             AddVersionNumber();
             FontConfig();
