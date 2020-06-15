@@ -1,0 +1,7 @@
+﻿CREATE TABLE TB_CRUD (
+	ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+	Name TEXT NOT NULL,
+	Description TEXT,
+	Image BLOB,
+	Date DATETIME DEFAULT (datetime('now','localtime'))
+)

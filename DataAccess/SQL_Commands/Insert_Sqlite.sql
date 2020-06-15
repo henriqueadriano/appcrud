@@ -1,0 +1,1 @@
+﻿INSERT INTO TB_CRUD (Name,Description,Image) VALUES (@Name,@Description,@Image)
