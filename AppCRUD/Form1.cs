@@ -9,7 +9,6 @@ using System.Drawing;
 using System.Drawing.Text;
 using System.IO;
 using System.Reflection;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace AppCRUD
@@ -32,6 +31,7 @@ namespace AppCRUD
         private const string INSERT_SUCCESS = "Model Created Successiful.";
         private const string DELETE_SUCCESS = "Model Deleted Successiful.";
         private const string UPDATE_SUCCESS = "Model Updated Successiful.";
+        private const string SEARCH_NO_RESULT = "No results!";
         #endregion
 
         public Form1(IDataBaseService database, IFormHelper formHelper, ILog log)
@@ -336,6 +336,31 @@ namespace AppCRUD
         private void tabControl1_Click(object sender, EventArgs e)
         {
             LodGridHistory();
+        }
+
+        private void btn_search_report_Click(object sender, EventArgs e)
+        {
+            var dateStart = dateTimePicker1.Value;
+            var dateEnd = dateTimePicker2.Value;
+
+            if (_formHelper.FieldsValidationReportSearch(dateStart, dateEnd))
+            {
+                var result = _database.FindReportByDate(dateStart.ToString("yyyy-MM-dd"), dateEnd.ToString("yyyy-MM-dd"));
+                if (result.Count == 0)
+                    MessageBox.Show(SEARCH_NO_RESULT);
+                else
+                    dataGridView2.DataSource = result;
+            }
+            else
+                MessageBox.Show(
+                    _formHelper.sbErrorMessage.ToString(),
+                    "Validation Fields",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Exclamation
+                    );
+            _formHelper.sbErrorMessage.Clear();
+            _log.Info(new LogDetails().SetLogClass(this.GetType().Name).SetLogMethod(LogDetails.GetCurrentMethod()));
+
         }
     }
 

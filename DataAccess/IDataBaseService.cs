@@ -11,5 +11,6 @@ namespace DataAccess
         int DeleteModel(CrudModel crudModel);
         List<CrudModel> FindByOption(DropDownItem option);
         List<Report> LoadReport();
+        List<Report> FindReportByDate(string dateStart, string dateEnd);
     }
 }

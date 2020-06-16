@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 using System.Text;
+using System;
 
 namespace Helper
 {
@@ -14,5 +15,6 @@ namespace Helper
         bool FieldsValidationUpdate(CrudModel model);
         bool VerifyImageNotNull(Image image);
         bool FieldsValidationSearch(DropDownItem itemSearch);
+        bool FieldsValidationReportSearch(DateTime dateStart, DateTime dateEnd);
     }
 }

@@ -53,6 +53,11 @@ namespace DataAccess.Models
                             _message = "User clear grid.";
                             break;
                         }
+                    case "btn_search_report_Click":
+                        {
+                            _message = "User click on Report Search.";
+                            break;
+                        }
                     default:
                         _message = string.Empty;
                         break;

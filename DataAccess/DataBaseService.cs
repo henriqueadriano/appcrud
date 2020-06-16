@@ -13,6 +13,7 @@ namespace DataAccess
         private static string Update = File.ReadAllText(@"SQL_Commands\Update_Sqlite.sql");
         private static string Delete = File.ReadAllText(@"SQL_Commands\Delete_Sqlite.sql");
         private static string FindByFilter = File.ReadAllText(@"SQL_Commands\FindByFilter_Sqlite.sql");
+        private static string FindByDate = File.ReadAllText(@"SQL_Commands\Report_Find_Log_Sqlite.sql");
         private static string Report = File.ReadAllText(@"SQL_Commands\Report.sql");
 
         private readonly ISqliteDataAccess _database;
@@ -121,6 +122,22 @@ namespace DataAccess
                 var output = _database.LoadReport<Report>(Report);
                 _log.Info(new LogDetails().SetLogClass(this.GetType().Name).SetLogMethod(LogDetails.GetCurrentMethod()));
                 return output;
+            }
+            catch (Exception ex)
+            {
+                _log.Error(ex);
+                return new List<Report>();
+            }
+        }
+
+        public List<Report> FindReportByDate(string dateStart, string dateEnd)
+        {
+            try
+            {
+                _log.Info(new LogDetails().SetLogClass(this.GetType().Name).SetLogMethod(LogDetails.GetCurrentMethod()));
+                string sql;
+                sql = FindByDate.Replace("@DateStart", dateStart).Replace("@DateEnd", dateEnd);
+                return _database.FindReportByDate<Report>(sql);
             }
             catch (Exception ex)
             {

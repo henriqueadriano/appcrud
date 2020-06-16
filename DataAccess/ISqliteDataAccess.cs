@@ -10,5 +10,6 @@ namespace DataAccess
         int DeleteModel<T>(T crudModel, string sql);
         List<T> FindByOption<T>(string sql);
         List<T> LoadReport<T>(string sql);
+        List<T> FindReportByDate<T>(string sql);
     }
 }

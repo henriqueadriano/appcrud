@@ -61,7 +61,7 @@
             this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
             this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
+            this.btn_search_report = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.groupBox1.SuspendLayout();
@@ -365,7 +365,7 @@
             this.groupBox2.Controls.Add(this.dateTimePicker1);
             this.groupBox2.Controls.Add(this.label5);
             this.groupBox2.Controls.Add(this.label4);
-            this.groupBox2.Controls.Add(this.button1);
+            this.groupBox2.Controls.Add(this.btn_search_report);
             this.groupBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBox2.ForeColor = System.Drawing.Color.Navy;
             this.groupBox2.Location = new System.Drawing.Point(8, 7);
@@ -409,16 +409,17 @@
             this.label4.TabIndex = 21;
             this.label4.Text = "From  day:";
             // 
-            // button1
+            // btn_search_report
             // 
-            this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F);
-            this.button1.ForeColor = System.Drawing.Color.Navy;
-            this.button1.Location = new System.Drawing.Point(475, 17);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(226, 36);
-            this.button1.TabIndex = 20;
-            this.button1.Text = "Search";
-            this.button1.UseVisualStyleBackColor = true;
+            this.btn_search_report.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F);
+            this.btn_search_report.ForeColor = System.Drawing.Color.Navy;
+            this.btn_search_report.Location = new System.Drawing.Point(475, 17);
+            this.btn_search_report.Name = "btn_search_report";
+            this.btn_search_report.Size = new System.Drawing.Size(226, 36);
+            this.btn_search_report.TabIndex = 20;
+            this.btn_search_report.Text = "Search";
+            this.btn_search_report.UseVisualStyleBackColor = true;
+            this.btn_search_report.Click += new System.EventHandler(this.btn_search_report_Click);
             // 
             // Form1
             // 
@@ -474,7 +475,7 @@
         private System.Windows.Forms.DateTimePicker dateTimePicker1;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button btn_search_report;
         private System.Windows.Forms.DateTimePicker dateTimePicker2;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.DataGridView dataGridView2;

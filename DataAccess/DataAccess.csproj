@@ -84,6 +84,9 @@
     <Content Include="SQL_Commands\FindByFilter_Sqlite.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="SQL_Commands\Report_Find_Log_Sqlite.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="SQL_Commands\Report.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

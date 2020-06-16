@@ -114,6 +114,27 @@ namespace Helper
                 return false;
             }
         }
+
+        public bool FieldsValidationReportSearch(DateTime dateStart, DateTime dateEnd)
+        {
+            bool validation = true;
+            _sbErrorMessage = _sbErrorMessage == null ? new StringBuilder() : _sbErrorMessage;
+            
+            if (dateStart.Date > DateTime.Now)
+            { 
+                _sbErrorMessage.Append("Please choose a start date not bigger then today.\n"); validation = false; 
+            }
+            if (dateEnd.Date > DateTime.Now)
+            {
+                _sbErrorMessage.Append("Please choose a end date not bigger then today.\n"); validation = false;
+            }
+            if (dateStart.Date > dateEnd.Date)
+            {
+                _sbErrorMessage.Append("Please choose a end date not bigger then start date."); validation = false;
+            }
+            _log.Info(new LogDetails().SetLogClass(this.GetType().Name).SetLogMethod(LogDetails.GetCurrentMethod()));
+            return validation;
+        }
         private StringBuilder CreateStringBuilder() => _sbErrorMessage is null ? new StringBuilder() : _sbErrorMessage;
     }
 }

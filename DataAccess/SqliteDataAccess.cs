@@ -86,6 +86,14 @@ namespace DataAccess
             }
         }
 
+        public List<T> FindReportByDate<T>(string sql)
+        {
+            using (IDbConnection cnn = new SQLiteConnection(LoadConnStrLog()))
+            {
+                return cnn.Query<T>(sql, new DynamicParameters()).ToList();
+            }
+        }
+
         public List<T> LoadReport<T>(string sql)
         {
             using (IDbConnection cnn = new SQLiteConnection(LoadConnStrLog()))
