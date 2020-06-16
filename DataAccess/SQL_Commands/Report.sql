@@ -1,1 +1,1 @@
-﻿SELECT Date, Message FROM Log WHERE lEVEL = 'INFO' AND instr(Message,'Form1') > 0;
+﻿SELECT Date, Message FROM Log WHERE LEVEL = 'INFO' AND instr(Message,'Form1') > 0;
