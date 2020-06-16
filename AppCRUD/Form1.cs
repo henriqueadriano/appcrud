@@ -321,14 +321,14 @@ namespace AppCRUD
             this.Text += $" version {versionInfo.FileVersion} ";
         }
         
-        private static async Task UpdateApp()
+        private void UpdateApp()
         {
             string subPath = UPDATE_FOLDER_PATH;
             if (!Directory.Exists(subPath))
                 Directory.CreateDirectory(subPath);
             using (var manager = new UpdateManager(subPath))
             {
-                await manager.UpdateApp();
+                manager.UpdateApp();
             }
         }
         #endregion

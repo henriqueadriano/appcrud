@@ -4,6 +4,7 @@ using SimpleInjector;
 using DataAccess;
 using Helper;
 using log4net;
+using SimpleInjector.Lifestyles;
 
 namespace AppCRUD
 {
@@ -26,7 +27,6 @@ namespace AppCRUD
             //Config log4net
             log4net.Config.XmlConfigurator.Configure();
 
-
             Application.Run(container.GetInstance<Form1>());
         }
 
@@ -36,11 +36,11 @@ namespace AppCRUD
             container = new Container();
 
             // Register your types, for instance:
-            container.Register<IDataBaseService, DataBaseService>();
+            container.Register<IDataBaseService, DataBaseService>(Lifestyle.Singleton);
             container.Register<IFormHelper, FormHelper>(Lifestyle.Singleton);
             container.Register<ISqliteDataAccess, SqliteDataAccess>(Lifestyle.Singleton);
             container.Register<ILog>(()=>LogManager.GetLogger(typeof(object)),Lifestyle.Singleton);
-            container.Register<Form1>();
+            container.Register<Form1>(Lifestyle.Singleton);
         }
     }
 }
