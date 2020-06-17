@@ -1,13 +1,17 @@
 ﻿using DataAccess;
 using DataAccess.Models;
 using Helper;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
 using log4net;
 using Squirrel;
 using System;
 using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Drawing.Text;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
 
@@ -20,8 +24,9 @@ namespace AppCRUD
         [System.Runtime.InteropServices.DllImport("gdi32.dll")]
         private static extern IntPtr AddFontMemResourceEx(IntPtr pbFont, uint cbFont, IntPtr pdv, [System.Runtime.InteropServices.In] ref uint pcFonts);
         private PrivateFontCollection fonts = new PrivateFontCollection();
-        Font myFont;
+        System.Drawing.Font myFont;
         private const string UPDATE_FOLDER_PATH = @"C:\Temp\Releases";
+        private const string DATE_FORMAT = "yyyy-MM-dd";
 
         //Dependency Injection
         private readonly IDataBaseService _database; 
@@ -63,7 +68,7 @@ namespace AppCRUD
         {
             byte[] img2 = (byte[])dataGridView1.CurrentRow.Cells[3].Value;
             MemoryStream ms2 = new MemoryStream(img2);
-            pictureBox1.Image = Image.FromStream(ms2);
+            pictureBox1.Image = System.Drawing.Image.FromStream(ms2);
 
             textBox_ID.Text = dataGridView1.CurrentRow.Cells[0].Value.ToString();
             textBox_Name.Text = dataGridView1.CurrentRow.Cells[1].Value.ToString();
@@ -79,7 +84,7 @@ namespace AppCRUD
             if (opf.ShowDialog() == DialogResult.OK)
                 if (_formHelper.CanResizeImage(opf))
                 {
-                    pictureBox1.Image = Image.FromFile(opf.FileName);
+                    pictureBox1.Image = System.Drawing.Image.FromFile(opf.FileName);
                 }
                 else
                 {
@@ -200,6 +205,41 @@ namespace AppCRUD
             LoadGridView();
             _log.Info(new LogDetails().SetLogClass(this.GetType().Name).SetLogMethod(LogDetails.GetCurrentMethod()));
         }
+
+        private void tabControl1_Click(object sender, EventArgs e)
+        {
+            LodGridHistory();
+        }
+
+        private void btn_search_report_Click(object sender, EventArgs e)
+        {
+            var dateStart = dateTimePicker1.Value;
+            var dateEnd = dateTimePicker2.Value;
+
+            if (_formHelper.FieldsValidationReportSearch(dateStart, dateEnd))
+            {
+                var result = _database.FindReportByDate(dateStart.ToString(DATE_FORMAT), dateEnd.ToString(DATE_FORMAT));
+                if (result.Count == 0)
+                    MessageBox.Show(SEARCH_NO_RESULT);
+                else
+                    dataGridView2.DataSource = result;
+            }
+            else
+                MessageBox.Show(
+                    _formHelper.sbErrorMessage.ToString(),
+                    "Validation Fields",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Exclamation
+                    );
+            _formHelper.sbErrorMessage.Clear();
+            _log.Info(new LogDetails().SetLogClass(this.GetType().Name).SetLogMethod(LogDetails.GetCurrentMethod()));
+
+        }
+
+        private void btn_export_pdf_Click(object sender, EventArgs e)
+        {
+            ExportToPdf();
+        }
         #endregion
 
         #region Helpers
@@ -291,7 +331,7 @@ namespace AppCRUD
             fonts.AddMemoryFont(fontPtr, Properties.Resources.ARCADECLASSIC.Length);
             AddFontMemResourceEx(fontPtr, (uint)Properties.Resources.ARCADECLASSIC.Length, IntPtr.Zero, ref dummy);
             System.Runtime.InteropServices.Marshal.FreeCoTaskMem(fontPtr);
-            myFont = new Font(fonts.Families[0], 11.0F);
+            myFont = new System.Drawing.Font(fonts.Families[0], 11.0F);
         }
         
         public void SetCustomizedFont(Control control)
@@ -311,6 +351,96 @@ namespace AppCRUD
             btn_add_image.Font = myFont;
 
         }
+
+        private void ExportToPdf()
+        {
+            try
+            {
+                var pdfDoc = new Document(PageSize.LETTER, 40f, 40f, 60f, 60f);
+                SaveFileDialog dialog = new SaveFileDialog();
+                dialog.Title = "Save file as...";
+                dialog.Filter = "Pdf Files|*.pdf";
+                dialog.RestoreDirectory = true;
+
+                if (dialog.ShowDialog() == DialogResult.OK)
+                {
+                    PdfWriter.GetInstance(pdfDoc, new FileStream(dialog.FileName, FileMode.OpenOrCreate));
+                    pdfDoc.Open();
+
+                    var image = Properties.Resources.AppCRUD_logo;
+                    var png = iTextSharp.text.Image.GetInstance(image, ImageFormat.Png);
+                    png.ScalePercent(40f);
+                    png.SetAbsolutePosition(pdfDoc.Left, pdfDoc.Top);
+                    pdfDoc.Add(png);
+
+                    var spacer = new Paragraph("")
+                    {
+                        SpacingBefore = 10f,
+                        SpacingAfter = 10f,
+                    };
+                    pdfDoc.Add(spacer);
+
+                    var headerTable = new PdfPTable(new[] { .75f, 2f })
+                    {
+                        HorizontalAlignment = Left,
+                        WidthPercentage = 75,
+                        DefaultCell = { MinimumHeight = 22f }
+                    };
+
+                    headerTable.AddCell("Date");
+                    headerTable.AddCell(DateTime.Now.ToString());
+                    headerTable.AddCell("Name");
+                    headerTable.AddCell("Henrique");
+                    headerTable.AddCell("Project Number");
+                    headerTable.AddCell("80000");
+
+                    pdfDoc.Add(headerTable);
+                    pdfDoc.Add(spacer);
+
+                    var columnCount = dataGridView2.ColumnCount;
+                    var columnWidths = new[] { 2f, 2f };
+
+                    var table = new PdfPTable(columnWidths)
+                    {
+                        HorizontalAlignment = Left,
+                        WidthPercentage = 100,
+                        DefaultCell = { MinimumHeight = 22f }
+                    };
+
+                    var cell = new PdfPCell(new Phrase("User Report Actictons"))
+                    {
+                        Colspan = columnCount,
+                        HorizontalAlignment = 1,  //0=Left, 1=Centre, 2=Right
+                        MinimumHeight = 25f
+                    };
+
+                    table.AddCell(cell);
+
+                    dataGridView2.Columns
+                        .OfType<DataGridViewColumn>()
+                        .ToList()
+                        .ForEach(c => table.AddCell(c.Name));
+
+                    dataGridView2.Rows
+                        .OfType<DataGridViewRow>()
+                        .ToList()
+                        .ForEach(r =>
+                        {
+                            var cells = r.Cells.OfType<DataGridViewCell>().ToList();
+                            cells.ForEach(c => table.AddCell(c.Value.ToString()));
+                        });
+
+                    pdfDoc.Add(table);
+
+                    pdfDoc.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                _log.Error(ex);
+            }
+        }
+
         #endregion
 
         #region Update AppCRUD
@@ -331,37 +461,8 @@ namespace AppCRUD
                 manager.UpdateApp();
             }
         }
+        
         #endregion
-
-        private void tabControl1_Click(object sender, EventArgs e)
-        {
-            LodGridHistory();
-        }
-
-        private void btn_search_report_Click(object sender, EventArgs e)
-        {
-            var dateStart = dateTimePicker1.Value;
-            var dateEnd = dateTimePicker2.Value;
-
-            if (_formHelper.FieldsValidationReportSearch(dateStart, dateEnd))
-            {
-                var result = _database.FindReportByDate(dateStart.ToString("yyyy-MM-dd"), dateEnd.ToString("yyyy-MM-dd"));
-                if (result.Count == 0)
-                    MessageBox.Show(SEARCH_NO_RESULT);
-                else
-                    dataGridView2.DataSource = result;
-            }
-            else
-                MessageBox.Show(
-                    _formHelper.sbErrorMessage.ToString(),
-                    "Validation Fields",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Exclamation
-                    );
-            _formHelper.sbErrorMessage.Clear();
-            _log.Info(new LogDetails().SetLogClass(this.GetType().Name).SetLogMethod(LogDetails.GetCurrentMethod()));
-
-        }
     }
 
 }

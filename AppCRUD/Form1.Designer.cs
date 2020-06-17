@@ -55,7 +55,7 @@
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.dataGridView2 = new System.Windows.Forms.DataGridView();
-            this.button2 = new System.Windows.Forms.Button();
+            this.btn_export_pdf = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.dateTimePicker2 = new System.Windows.Forms.DateTimePicker();
             this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
@@ -327,7 +327,7 @@
             // tabPage2
             // 
             this.tabPage2.Controls.Add(this.dataGridView2);
-            this.tabPage2.Controls.Add(this.button2);
+            this.tabPage2.Controls.Add(this.btn_export_pdf);
             this.tabPage2.Controls.Add(this.groupBox2);
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
@@ -347,16 +347,17 @@
             this.dataGridView2.Size = new System.Drawing.Size(707, 596);
             this.dataGridView2.TabIndex = 21;
             // 
-            // button2
+            // btn_export_pdf
             // 
-            this.button2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F);
-            this.button2.ForeColor = System.Drawing.Color.Navy;
-            this.button2.Location = new System.Drawing.Point(589, 678);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(129, 23);
-            this.button2.TabIndex = 20;
-            this.button2.Text = "export  pdf";
-            this.button2.UseVisualStyleBackColor = true;
+            this.btn_export_pdf.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F);
+            this.btn_export_pdf.ForeColor = System.Drawing.Color.Navy;
+            this.btn_export_pdf.Location = new System.Drawing.Point(589, 678);
+            this.btn_export_pdf.Name = "btn_export_pdf";
+            this.btn_export_pdf.Size = new System.Drawing.Size(129, 23);
+            this.btn_export_pdf.TabIndex = 20;
+            this.btn_export_pdf.Text = "export  pdf";
+            this.btn_export_pdf.UseVisualStyleBackColor = true;
+            this.btn_export_pdf.Click += new System.EventHandler(this.btn_export_pdf_Click);
             // 
             // groupBox2
             // 
@@ -477,7 +478,7 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Button btn_search_report;
         private System.Windows.Forms.DateTimePicker dateTimePicker2;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button btn_export_pdf;
         private System.Windows.Forms.DataGridView dataGridView2;
     }
 }
