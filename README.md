@@ -2,4 +2,8 @@
 
 The AppCRUD app is a simple crud that involves some interesting concepts that we can apply for many different projects, technologies, and so on.
 
+You can follow the project tasks at trello:
+
+https://trello.com/b/45I7ojij/appcrud-windows-forms
+
 
