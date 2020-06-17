@@ -6,4 +6,6 @@ You can follow the project tasks at trello:
 
 https://trello.com/b/45I7ojij/appcrud-windows-forms
 
+You can also download the latest version:
 
+https://www.dropbox.com/s/ll53rtie2dbrhmu/Setup.exe?dl=0
